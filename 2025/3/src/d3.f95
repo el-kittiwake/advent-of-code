@@ -8,7 +8,9 @@
 !	status, old indicates existing file
 !	action, read, write, readwrite
 ! read()
-!	
+!	unit, IO unit to read from (or variable)
+!	fmt, format specifier (a for character, i for integer)
+!	iostat, locaton to store the result of the operation 0 = success
 ! -----------------------------------------------------------------------------
 
 program d3p1
