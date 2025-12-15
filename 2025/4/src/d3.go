@@ -114,6 +114,7 @@ func is_Accessible(field *Field, x, y int) bool {
 }
 
 // Following needed to allow writing to a copy for next rounds
+// Copy array of strings from file to array of bytes.
 func copyArrayToField(fileLines []string) Field {
 	var new Field
 	for i, line := range fileLines {
@@ -125,6 +126,7 @@ func copyArrayToField(fileLines []string) Field {
 	return new
 }
 
+// Copy array of bytes to new array of bytes.
 func copyField(old Field) Field {
 	var new Field = make(Field, len(old))
 	for i := range old {

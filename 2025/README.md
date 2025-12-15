@@ -9,9 +9,7 @@ My answers are: 1139 and 6684 for part 1 and 2 respectively.
 The solution to this part is the number of times the position of the dial equals 0.
 
 ##### My solution
-I loop through my input file line by line, each line is a separate direction and click count (XY value).
-
-While there are lines to read I extract the direction (R or L, which I save as a sign value 1 and -1 respectively), and number of clicks.
+I read each line and extract the direction (R or L, which I save as a sign value 1 and -1 respectively), and number of clicks.
 
 I then calculate the modulo of the rotations to 100, this eliminates any 100 click rotations as they cancel.
 
@@ -25,9 +23,7 @@ Once end of file is reached I output the number of zeroes.
 The solution to this part is the number of times the position of the dial equals 0 as well as the number of times the dial passes 0 during a rotation.
 
 ##### My solution
-I loop through my input file line by line, each line is a separate direction and click count (XY value).
-
-While there are lines to read I extract the direction (R or L, which I save as a sign value 1 and -1 respectively), and number of clicks.
+I read each line and extract the direction (R or L, which I save as a sign value 1 and -1 respectively), and number of clicks.
 
 I then calculate the modulo of the rotations to 100, this eliminates any 100 click rotations as they cancel. Then add the current position to the calculated modulo to find my rotation offset.
 
@@ -44,8 +40,11 @@ Once end of file is reached I output the number of zeroes stopped at and passed 
 ### Notes
 Part 1 was relatively quick for me, within an hour maybe. Part 2 took me quite a bit longer, I struggled to find why I was getting too large values. Turns out I was counting 0 twice if the current position was 0.
 
+---
+
 # Day 2 (Dodgy CPP)
 You are given a comma separated string of numeric ranges, such as: 13-30,6859-7000,42382932-42449104
+Within these ranges are several invalid IDs.
 
 My answers are: 13919717792 and 14582313461
 
@@ -72,7 +71,9 @@ By combining the string and a copy of itself and starting the search from index 
 ### Notes
 Other than the quite bloaty file handling and string splitting part 1 at least has quite a bit of inefficient conversion between numbers and strings. Part 2 is quite clean and intuitive. I am not really taking advantage of CPP's features here, other than some library functions.
 
-# Day 3 (Dodgier Fortran)
+---
+
+# Day 3 (Fortran)
 You are given a line delimited list of numbers. Each number corresponds to a battery.
 You must turn on a given number of batteries in order to produce the maximum joltage.
 Basically, find the largest number of a certain length within the given number.
@@ -99,4 +100,49 @@ Do this for the required number of digits.
 First time messing with Fortran. Quite different to what I am used to but actually quite easy to use.
 
 Used the [Intel fortran manual](https://www.intel.com/content/www/us/en/docs/fortran-compiler/developer-guide-reference/2023-0/language-reference.html) quite a lot as well as [Oracle's manual](https://docs.oracle.com/cd/E19957-01/805-4939/index.html), however Intel's is easier to follow and reference.
+
+---
+
+# Day 4 (Go)
+You are given a field of '.' and '@'. Each @ corresponds to a roll of paper.
+You must access and remove rolls of paper, but only rolls of paper that have fewer than 4 rolls of paper surrounding it can be accessed.
+So, the solution is the number of rolls you can access.
+
+Example input: 
+```
+..@@.@@@@.
+@@@.@.@.@@
+@@@@@.@.@@
+@.@@@@..@.
+@@.@@@@.@@
+.@@@@@@@.@
+.@.@.@.@@@
+@.@@@.@@@@
+.@@@@@@@@.
+@.@.@@@.@.
+```
+
+My answers are: 1416 and 9086
+
+### Part 1
+Find the number of accessible rolls on the given input.
+
+In the example above there are 13.
+
+### Part 2
+Find the number of accessible rolls in the given input. After checking, change all accessible '@' to '.' and check agian. Continue until no more rolls are accessible. That is the solution to this part.
+
+In the example above there are 43.
+
+##### My solution
+Running from the top left to bottom right, checking each cell around the base cell, skipping any cell that would go under 0 or above the size of the field.
+
+For part 1 there is only one pass. However for the combined solution I needed to copy the field at the start of the run and change the copy in relation to what rolls are acciessible. Then make that copy the main field for the next iteration.
+
+### Notes
+I spent a long time trying to work around Go being unable to edit the original array directly, leaving me having to copy a couple of other's array handling solutions to this problem.
+
+Initially with the compined part 1 and 2 solution I struggled to get the correct 1st iteration value. This was because I was editing the field that was being looped over at the time. This meant that when going to the next line the previous line was changed. The answer was always correct because the previous lines had already been counted.
+
+---
 
