@@ -1,4 +1,2 @@
-# advent-of-code-2025
+# Advent of Code
 [Details here (adventofcode.com).](https://adventofcode.com/)
-
-
