@@ -130,19 +130,48 @@ Find the number of accessible rolls on the given input.
 In the example above there are 13.
 
 ### Part 2
-Find the number of accessible rolls in the given input. After checking, change all accessible '@' to '.' and check agian. Continue until no more rolls are accessible. That is the solution to this part.
+Find the number of accessible rolls in the given input. After checking, change all accessible '@' to '.' and check again. Continue until no more rolls are accessible. That is the solution to this part.
 
 In the example above there are 43.
 
 ##### My solution
 Running from the top left to bottom right, checking each cell around the base cell, skipping any cell that would go under 0 or above the size of the field.
 
-For part 1 there is only one pass. However for the combined solution I needed to copy the field at the start of the run and change the copy in relation to what rolls are acciessible. Then make that copy the main field for the next iteration.
+For part 1 there is only one pass. However for the combined solution I needed to copy the field at the start of the run and change the copy in relation to what rolls are accessible. Then make that copy the main field for the next iteration.
 
 ### Notes
 I spent a long time trying to work around Go being unable to edit the original array directly, leaving me having to copy a couple of other's array handling solutions to this problem.
 
-Initially with the compined part 1 and 2 solution I struggled to get the correct 1st iteration value. This was because I was editing the field that was being looped over at the time. This meant that when going to the next line the previous line was changed. The answer was always correct because the previous lines had already been counted.
+Initially with the combined part 1 and 2 solution I struggled to get the correct 1st iteration value. This was because I was editing the field that was being looped over at the time. This meant that when going to the next line the previous line was changed. The answer was always correct because the previous lines had already been counted.
 
 ---
 
+# Day 5 (Javascript)
+You are given a list of ID ranges, followed by a list of individual ingredient IDs.
+An ingredient is considered "fresh" if its ID falls within at least one of the given ranges.
+
+My answers are: 868 and 354143734113772 for parts 1 and 2 respectively.
+
+### Part 1
+The solution is the count of listed ingredient IDs that are fresh, i.e. fall within at least one of the given ranges. We do not count appearance in multiple ranges.
+
+##### My solution
+I split the input at the blank line separating ranges from ingredients. Each range is parsed into a `[start, end]` pair. I then loop through every ingredient ID and check it against every range, incrementing a counter whenever a match is found.
+
+### Part 2
+The solution is the total number of unique IDs that are covered by at least one range. The size of the union of all ranges.
+
+##### My solution
+I sort the ranges by their start value and sweep through them left to right, tracking the furthest endpoint seen so far (`currentMax`). For each range:
+
+- If it starts beyond the current furthest endpoint, it is entirely new territory and the full range is added to the count.
+- If it overlaps with (or is adjacent to) the current furthest endpoint, only the portion extending beyond that endpoint is added.
+
+### Notes
+Part 1 initially gave 867 because I was slicing the input array with an off-by-one error, dropping the first ingredient ID.
+
+Part 2 required careful handling of the overlap check. For conditions of partially overlapping range I at first used less than (`<`), instead of less-than-or-equal (`<=`), meaning any range whose start exactly equalled the current furthest endpoint was silently skipped. This resulted in my first result being 339868252840898, off by 14 trillion. I also had an off-by-one in the count (`element[1] - currentMax + 1` instead of `element[1] - currentMax`).
+
+First time using Node.js / CommonJS for AoC. Fairly straightforward to work with for this kind of numerical problem. Lots of methods to make the job easier and a relaxed syntax.
+
+---
