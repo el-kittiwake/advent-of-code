@@ -7,11 +7,11 @@ temp/
 *.*bak
 *.*old
 settings.json
+*_ex
+*test*
 
 # Prerequisites
 *.d
-
-*test*
 
 # Compiled Object files
 *.slo
