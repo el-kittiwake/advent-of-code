@@ -289,7 +289,7 @@ The inner loop iterates over the active set, building the next row's active set:
 
 ### Part 2
 
-Count the number of distinct timelines active after the beam has completed all possible journeys through the manifold. If the beam hits a splitter is splits one way and that counts as one of two possible paths from that splitter.
+Count the number of unique paths from `S` to the bottom of the manifold. If the beam hits a splitter is splits one way and that counts as one of two possible paths from that splitter.
 
 #### My solution
 
