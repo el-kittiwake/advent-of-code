@@ -19,3 +19,5 @@
 [Day 7 (Racket)](./7/README.md)
 
 [Day 8 (Ruby)](./8/README.md)
+
+[Day 9 (D)](./9/README.md)
