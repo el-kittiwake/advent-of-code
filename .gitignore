@@ -9,9 +9,7 @@ temp/
 settings.json
 *_ex
 *test*
-
-# Prerequisites
-*.d
+*.txt
 
 # Compiled Object files
 *.slo
