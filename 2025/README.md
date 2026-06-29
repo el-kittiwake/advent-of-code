@@ -21,3 +21,5 @@
 [Day 8 (Ruby)](./8/README.md)
 
 [Day 9 (D)](./9/README.md)
+
+[Day 10 (Python)](./10/README.md)

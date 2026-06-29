@@ -10,6 +10,7 @@ settings.json
 *_ex
 *test*
 *.txt
+.venv/
 
 # Compiled Object files
 *.slo
