@@ -7,7 +7,7 @@ temp/
 *.*bak
 *.*old
 settings.json
-*_ex
+*_ex*
 *test*
 *.txt
 .venv/

@@ -16,7 +16,7 @@ Each line consists of:
 
 My answers are: 517 and 21469 (1.4 seconds) for parts 1 and 2 respectively.
 
-### Input handling
+## Input handling
 
 The file is read linewise and the current line is processed before the next line is read. Lines are parsed using Python's regex module `re`.
 

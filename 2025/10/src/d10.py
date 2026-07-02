@@ -1,3 +1,5 @@
+# Advent of code 2025, day 10, Python
+
 import re
 import itertools
 import sys

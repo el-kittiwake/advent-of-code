@@ -23,3 +23,5 @@
 [Day 9 (D)](./9/README.md)
 
 [Day 10 (Python)](./10/README.md)
+
+[Day 11 (Haskell)](./11/README.md)
