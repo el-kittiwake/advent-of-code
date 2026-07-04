@@ -7,10 +7,13 @@ temp/
 *.*bak
 *.*old
 settings.json
-*_ex*
 *test*
 *.txt
 .venv/
+
+# AoC content
+*_ex*
+*_input*
 
 # Compiled Object files
 *.slo

@@ -25,3 +25,5 @@
 [Day 10 (Python)](./10/README.md)
 
 [Day 11 (Haskell)](./11/README.md)
+
+[Day 12 (COBOL-85)](./12/README.md)
