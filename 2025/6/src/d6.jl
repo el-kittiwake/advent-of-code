@@ -4,12 +4,14 @@
 	Part 2: Read numbers vertically right to left, grouped by operator-delimited
 			blocks. Return the total of all blocks. Each number is formed by reading
 			the digits in a single column top to bottom, concatenating them and ignoring spaces.
+	
+	Part 1: 5784380717354
+	Part 2: 7996218225744
 =#
 
 # =====================
 # Function declarations
 # =====================
-
 #=
 	Open and read an input filename
 	https://www.geeksforgeeks.org/julia/opening-and-reading-a-file-in-julia/
@@ -21,40 +23,9 @@ function readFile(filename::String)::String
 end
 
 #=
-	Turn the split input string into a matrix the same shape as in the input.
-	- Clean each splitString (vector of strings) string of empty strings
-		and leading/trailing whitespace
-	- Split each string by spaces and add to a vector
-	- Change vectors to matrix and stack them one by one
-	- Return
-
-	This took a while, very convoluted but the advantages it has for large
-		datasets should make it worthwhile when used in the right place.
-=#
-function matrixise(splitString::Vector{SubString{String}})::Matrix{SubString{String}}
-	# Removes empty strings often left behind by splitting on `\n`
-	lines = filter(!isempty, splitString)
-
-	# Removes leading/trailing whitespace
-	# Splits on any number of spaces
-	# rows is vector of vectors, each vector is one row from input file
-	# Square brackets collects values into a vector
-	rows = [split(strip(line), r"\s+") for line in lines]
-
-	# permutedims.(rows) turns each row vector into a 1xN matrix
-	# 	broadcasting is a nice time saver ( . operator)
-	# vcat() stacks 2 matrices vertically
-	# reduce() applies the vcat through the whole list of matrices
-	cattedData = reduce(vcat, permutedims.(rows))
-
-	return cattedData
-end
-
-#=
 	Part 1
-	- use function matrixise() to turn the input file lines into a matrix
-	- Calculate size of matrix. size(<array>, <dimension>)
-	- Initialise a counter
+	- Calculate size of input data. length(<dimension>)
+	- Initialise a counter: <var> = zero(<type>)
 	- Loop until reaching the end of the array.
 	- Test for * or + final row (only these are possible in input files)
 	- Calculate result using:
@@ -63,35 +34,30 @@ end
 			broadcasting(.) performs the parse on all values
 	- Add current result to count and return once end reached
 =#
-function partOne(splitString::Vector{SubString{String}})::UInt64
-	inputData = matrixise(splitString)
-	#println(inputData)
+function partOne(inputData::Vector{Vector{SubString{String}}})::UInt64
+	# length(<collection>): number of elements in <collection>
+	# https://docs.julialang.org/en/v1/base/collections/#Base.length
+	width = length(inputData[1])
+	height = length(inputData)
 
-	# size() - returns the dimensional sizes of a given array, or only the given
-	# dimension's size.
-	# https://docs.julialang.org/en/v1/base/arrays/#Base.size
-	width = size(inputData, 2)
-	height = size(inputData, 1)
-	#println("Width | height: ", width, " | ", height)
-
-	# var = zero(type) is not necessary, but apparently good Julia practise.
+	# var = zero(type) is not necessary, but good Julia practise.
+	#	Ensures the correct width of integer.
 	# https://docs.julialang.org/en/v1/base/numbers/#Base.zero
 	count = zero(UInt64)
 
 	for i in 1:width
-		if inputData[height, i] == "*"
+		if inputData[height][i] == "*"
 			# prod() - Multiply the results of calling the function f on each
-			# element of an array over the given dimensions.
+			# 	element of an array over the given dimensions.
 			# sum() - same for summation
 			# https://docs.julialang.org/en/v1/base/collections/#Base.prod
 			# https://docs.julialang.org/en/v1/base/collections/#Base.sum
 			# parse() - Parse a string as a number of given format
 			# https://docs.julialang.org/en/v1/base/numbers/#Base.parse
-			result = prod(parse.(UInt64, inputData[1:height-1, i]))
+			result = prod(parse.(UInt64, [inputData[r][i] for r in 1:height-1]))
 		else
-			result = sum(parse.(UInt64, inputData[1:height-1, i]))
+			result = sum(parse.(UInt64, [inputData[r][i] for r in 1:height-1]))
 		end
-		#println("Column result: ", result)
 
 		count += result
 	end
@@ -124,8 +90,6 @@ function partTwo(splitString::Vector{SubString{String}})::UInt64
 	count = zero(UInt64)
 
 	for c in reverse(1:width)
-		#print(c); println(join(["$i: $(splitString[i][c])" for i in 1:height], " "))
-
 		# any() - Determine whether a condition returns true for any elements
 		#		  along the given dimensions of an array.
 		# join() - Concatenates given values. Within the conditions given
@@ -147,8 +111,6 @@ function partTwo(splitString::Vector{SubString{String}})::UInt64
 			end
 
 			count += result
-
-			#println("Column: ", c, " | Result: ", result, " | Count: ", count)
 		end
 
 		# Like any() but only returns true if all of a given collection matches the
@@ -171,7 +133,7 @@ end
 #=
 	Read input data
 =#
-fileLocation = "../d6p1_input"
+fileLocation = "../d6_input"
 fileContents = readFile(fileLocation)
 
 #=
@@ -182,18 +144,22 @@ fileContents = readFile(fileLocation)
 	|| @warn - Fail to warning the user about unequal line lengths
 =#
 splitString = filter(!isempty, split(fileContents, '\n'))
-allequal(length.(splitString)) || @warn "Input file lines are not equal width. Part 2 may fail."
-#print(splitString)
+allequal(length.(splitString)) || @warn "Input file line widths not equal. Part 2 may fail."
 
 #=
 	Part 1
-	Call part 1 function then print the total sum of all operations.
+	Prepare rows vector then call part 1 function then print the total sum of
+		all operations.
+	Splits on any number of spaces
+	rows is vector of vectors, each vector is one row from input file
+	Square brackets collects values into a vector
 =#
-countOne = partOne(splitString)
-println("Sum of columns (part 1): ", countOne)
+rows = [split(strip(line), r"\s+") for line in splitString]
+countOne = partOne(rows)
+println("Part 1: ", countOne)
 
 #=
 	Part 2
 =#
 countTwo = partTwo(splitString)
-println("Sum of reverse order place value columns (part 2): ", countTwo)
+println("Part 2: ", countTwo)
