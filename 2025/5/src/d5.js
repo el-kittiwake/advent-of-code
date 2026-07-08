@@ -1,3 +1,10 @@
+/**
+ * Advent of Code 2025, day 5, Javascript
+ * 
+ * Part 1: 868
+ * Part 2: 354143734113772
+ */
+
 // Import the 'fs' module.
 // Synchronous reading of files.
 const {readFileSync} = require('fs');
@@ -24,7 +31,7 @@ function handleFile(filename)
 */
 function splitRanges(array)
 {
-	let splitArr = new Array();
+	let splitArr = [];
 
 	array.forEach(element =>
 	{
@@ -51,8 +58,9 @@ function isFresh(range, ingredient)
 
 /*
 	Loop through ranges checking for fresh
-	array.some() method returns true if it finds an element in the array that
-		satisfies the provided testing function. Otherwise, it returns false
+	array.some(<callbackFn>) method returns true if it finds an element in the
+		array that satisfies the provided testing function.
+		Otherwise, it returns false
 	Once again, direct return is stylistically better.
 */
 function loopRanges(ranges, ingredient)
@@ -119,38 +127,38 @@ function countTotalFresh(ranges)
 	return count;
 }
 
-
 // ==================
 // Perform everything
 // ==================
 
-const array = handleFile('../d5p1_input')
+// Import file to vector of strings
+const array = handleFile('../d5_input')
 // {'maxArrayLength': null} shows all items no matter how many
 // https://techozu.com/show-all-items-console-log-node/
-//console.table(array);
 
 // Calculate ranges for array.slice()
+// Ranges: end point of ID ranges
+//		   start of ingredient IDs
+//		   end of ingredient IDs
 const splitRangesTo = array.indexOf('');
 const splitIngFrom = splitRangesTo + 1;
 const splitIngTo = array.length - 1;
-//console.log(splitRangesTo, splitIngFrom, splitIngTo)
 
-// Split file contents to specific arrays
-// Convert strings to numbers.
+// Split file contents to specific arrays.
+// Convert ingredient ID strings to numbers.
 const rangesArr = splitRanges(array.slice(0, splitRangesTo));
 let ingredientsArr = array.slice(splitIngFrom, splitIngTo);
 ingredientsArr = ingredientsArr.map(function(item)
 {
 	return Number(item);
 });
-//console.table(rangesArr);
-//console.table(ingredientsArr);
 
 // Part 1 functions
 const freshCounter = loopIngredients(rangesArr, ingredientsArr);
-console.log("Unspoiled ingredients: ", freshCounter);
+console.log("Part 1: ", freshCounter);
 
 // Part 2 functions
+// array.toSorted(<compareFn>): sorts array by result of <compareFn>
 const sortedRanges = rangesArr.toSorted(compareNumbers);
 const totalFreshCounter = countTotalFresh(sortedRanges);
-console.log("Total fresh IDs: ", totalFreshCounter);
+console.log("Part 2: ", totalFreshCounter);
