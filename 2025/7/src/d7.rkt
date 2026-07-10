@@ -4,6 +4,11 @@
 			https://learnxinyminutes.com/racket/
 			https://docs.racket-lang.org/guide/
 			https://docs.racket-lang.org/reference/
+
+	Racket uses kebab-case by convention.
+
+	Part 1: 1630
+	Part 2: 47857642990160
 |#
 
 ;; Defines the language and modules
@@ -24,7 +29,6 @@
 		sequence->list <sequence> : converts that sequence to a list.
 		list->vector <list> : converts that list to a vector.
 		The result is bound to a name with define.
-	Racket uses kebab-case by convention.
 |#
 (define in-file
 	(with-input-from-file file-path
@@ -46,6 +50,7 @@
 
 #|	====	Counting logic	====
 	"Beam" propagates downward through the grid.
+	(define-values ... ): Binds multiple returns to multiple names.
 	for/fold, state carrying loop. Via one or more accumulators declared on entry.
 		(for/fold ([<accu1> <init1>][<accu2> <init2>]) ([<clause>]) ... (values <retval1> <retval2>))
 	active-cells: hash of column indices with active beams in the current row. hash: key/value table.
@@ -56,6 +61,8 @@
 		Returns are fed back to the outer loop as updated accumulators.
 		n : current count of splits, updated if needed
 	if statement: (if (test) (then) (else) )
+	(char=? <char1> <char2> ...) : checks if all <char>s match
+	(string-ref <string> <pos>): returns whatever char is at the current position
 	let: (let [name (value)] (body) )
 	hash-set: (hash-set <hash-table> <key> <value>)
 	hash-ref: (hash-ref <hash-table> <key> <default>)
@@ -63,7 +70,6 @@
 		(let ([new-map <first hash-set>])	; bind result to new-map
 		(values <second hash-set>			; body: second hash-set uses the new new-map
 		(+ count 1)))
-
 |#
 (define-values (final-cells final-count)
 	(for/fold
@@ -77,15 +83,18 @@
 				;; Approach for part 1, before seeing part 2
 				;(values (set-union new-cells (set (- x 1) (+ x 1))) (+ count 1))
 				;(values (set-add new-cells x) count)
-				(let ([new-map (hash-set new-map (- x 1) (+ n (hash-ref new-map (- x 1) 0)))])		; true
-  				(values (hash-set new-map (+ x 1) (+ n (hash-ref new-map (+ x 1) 0))) (+ count 1)))
+				(
+					let ([new-map (hash-set new-map (- x 1) (+ n (hash-ref new-map (- x 1) 0)))])
+  					(values (hash-set new-map (+ x 1) (+ n (hash-ref new-map (+ x 1) 0))) (+ count 1))
+				)																				; true
 
-				(values (hash-set new-map x (+ n (hash-ref new-map x 0))) count)					; else
+				(values (hash-set new-map x (+ n (hash-ref new-map x 0))) count)				; else
 			)
 		)
 	)
 )
 
 ;; printf for a more C like way to output
+;; ~a format values for human readable display
 (printf "Part 1: ~a\n" final-count)
 (printf "Part 2: ~a\n" (apply + (hash-values final-cells)))
