@@ -15,6 +15,9 @@ settings.json
 *_ex*
 *_input*
 
+# Specific files
+2025/4/part2vis.png
+
 # Compiled Object files
 *.slo
 *.lo
@@ -66,5 +69,3 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-
-
