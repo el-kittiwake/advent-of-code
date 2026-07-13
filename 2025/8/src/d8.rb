@@ -8,6 +8,9 @@
 
   Multiline comments need an end
   snake_case by convention
+
+  Part 1: 123420
+  part 2: 673096646
 =end
 
 =begin
@@ -106,6 +109,7 @@ part1 = parent.keys.group_by { |x| find(parent, x) }
 
 #### part 2 routine ####
 # MakeSet part
+# Previous parent was mutated by .union(). It is easier to just recreate it.
 parent = INPUT_MAP.each_with_object({}) { |p, h| h[p] = p }
 
 # Union-find part
