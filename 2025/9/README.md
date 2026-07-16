@@ -1,6 +1,8 @@
 # Day 9 (D)
 
-You are given a line delimited list of coordinates representing red tiles on the floor of a cinema. Straight lines between red tiles are marked by green tiles. Together they represent the perimeter of an axis aligned polygon.
+I am given a line delimited list of coordinates representing red tiles on a floor. Straight lines between red tiles are marked by green tiles. Together they represent the perimeter of an axis aligned polygon.
+
+Input files are wrapped so the last tile is connected to the first tile.
 
 Example input:
 
@@ -15,28 +17,36 @@ Example input:
 7,3
 ```
 
-Represents this floor:
+Represents this floor (#: red, X: green):
 
 ``` text
 ..............
-.......#...#..
-..............
-..#....#......
-..............
-..#......#....
-..............
-.........#.#..
+.......#XXX#..
+.......X...X..
+..#XXXX#...X..
+..X........X..
+..#XXXXXX#.X..
+.........X.X..
+.........#X#..
 ..............
 
 ```
 
 My answers are: 4745816424 and 1351617690 for parts 1 and 2 respectively.
 
+## Input parsing
+
+The input file needs to be placed in memory in its entirety before working on the data.
+
+This is done using the D standard library. The file is read linewise and trailing whitespace removed using `chomp()`. The line is then split by commas and the pair of values converted to longs using `to!long()` and added to a vector of the two coordinates.
+This pair vector is then concatenated to the input coordinates array using the binary concatenate operator `~`.
+
+The end result is a vector of vectors containing two long values: `long[][]`.
+Long is chosen to make the arithmetic easy when calculating and comparing total sizes.
+
 ## Part 1
 
 Find the rectangle with the largest area possible. The rectangle must have two of its opposite corners being two of the given coordinates (red tiles).
-
-The example given has `2,5` and `11,1` resulting in the largest rectangle requiring 50 tiles.
 
 ### Part 1 solution
 
@@ -52,21 +62,7 @@ My initial result with my input was 2147458464, which was too low. The value is 
 
 Ostensibly the idea is the same as for part 1. However the largest rectangle must now fit within the perimeter of the polygon (perimeter inclusive).
 
-The given example creates the following shape into which the rectangle must fit:
-
-``` text
-..............
-.......#XXX#..
-.......X...X..
-..#XXXX#...X..
-..X........X..
-..#XXXXXX#.X..
-.........X.X..
-.........#X#..
-..............
-```
-
-This example has `9,5` and `2,3` resulting in 24 required tiles.
+The example has `9,5` and `2,3` resulting in 24 required tiles.
 
 ### Part 2 solution
 
@@ -74,9 +70,9 @@ Initially I thought to stay naive, checking for every rectangle like part 1 but 
 
 This was the most algorithm-heavy puzzle so far. It took me almost a week and a lot of searching for ideas. This is not something I am very familiar with, so it was education heavy. Ray-casting was my first non-naive thought, I didn't go that route because initially it seemed like the method I chose would be easier. It ultimately wasn't, but that was on me.
 
-The approach I went for consisted of marking all external cells, building a prefix sum array and finally iterating over all coordinate combinations as with part 1. After some wrestling with deep thought a coordinate compression step was added.
+The approach I went for consisted of marking all external cells, building a prefix sum array and finally iterating over all coordinate combinations as with part 1. After some wrestling, asking questions and thinking, a coordinate compression step was added.
 
-Break coordinates into sorted, unique, vectors per axis. This reduces the ~500 input coordinate pairs down to ~250 unique values per axis after removing duplicates. (at least for my input). This only works because the polygon is axis aligned.
+Break coordinates into sorted, unique, vectors per axis. This reduces the ~500 input coordinate pairs down to ~250 unique values per axis after removing duplicates (at least for my input). This only works because the polygon is axis aligned.
 
 Example input gives (`axesTuple` array):
 
@@ -85,9 +81,9 @@ xVals = [2, 7, 9, 11]     (compressed columns 0,1,2,3)
 yVals = [1, 3, 5, 7]      (compressed rows 0,1,2,3)
 ```
 
-[Coordinate compression](https://phuongdinh1411.github.io/cses-analyses/problem_soulutions/graph_algorithms/coordinate_compression_analysis), reduces the 100,000² space down to at most 500² (the number of coordinates in the input file). Because all polygon edges fall on vertices long edges of the same horizontal or vertical position can be compressed down to one cell.
+[Coordinate compression](https://phuongdinh1411.github.io/cses-analyses/problem_soulutions/graph_algorithms/coordinate_compression_analysis), reduces the 100,000^2 space down to at most 500^2 (the number of coordinates in the input file). Because all polygon edges fall on vertices, long edges of the same horizontal or vertical position can be compressed down to one cell.
 
-Use binary search to find the position in the x/y vectors. Mark this position in the coordinateLookup array, this is the coordinate compressed array which maps to the input data via their index.
+Use binary search to find the position in the x/y vectors. Mark this position in the `coordinateLookup` array, this is the coordinate compressed array which maps to the input data via their index.
 
 Add 1 to each value to account for a zero buffer added around the grid. This is to enable the filling method used later.
 
@@ -110,14 +106,14 @@ Mark the perimeter of the polygon in a 2D boolean array (6x6 including padding).
 Each pair of input vertices makes an edge, going from first to last should make a complete closed polygon. Compression removed the implied points. Example shown below:
 
 ``` text
-(7,1)→(11,1)  horizontal cj=1  mark [2][1],[3][1],[4][1]
-(11,1)→(11,7) vertical   ci=4  mark [4][1],[4][2],[4][3],[4][4]
-(11,7)→(9,7)  horizontal cj=4  mark [3][4],[4][4]
-(9,7)→(9,5)   vertical   ci=3  mark [3][3],[3][4]
-(9,5)→(2,5)   horizontal cj=3  mark [1][3],[2][3],[3][3]
-(2,5)→(2,3)   vertical   ci=1  mark [1][2],[1][3]
-(2,3)→(7,3)   horizontal cj=2  mark [1][2],[2][2]
-(7,3)→(7,1)   vertical   ci=2  mark [2][1],[2][2]
+(7,1)  -> (11,1)  horizontal cj=1  mark [2][1],[3][1],[4][1]
+(11,1) -> (11,7)  vertical   ci=4  mark [4][1],[4][2],[4][3],[4][4]
+(11,7) -> (9,7)   horizontal cj=4  mark [3][4],[4][4]
+(9,7)  -> (9,5)   vertical   ci=3  mark [3][3],[3][4]
+(9,5)  -> (2,5)   horizontal cj=3  mark [1][3],[2][3],[3][3]
+(2,5)  -> (2,3)   vertical   ci=1  mark [1][2],[1][3]
+(2,3)  -> (7,3)   horizontal cj=2  mark [1][2],[2][2]
+(7,3)  -> (7,1)   vertical   ci=2  mark [2][1],[2][2]
 ```
 
 Example boolean array (`compressedField` array):
@@ -125,16 +121,16 @@ Example boolean array (`compressedField` array):
 ``` text
 j\i:  0  1  2  3  4  5
   0:  .  .  .  .  .  .
-  1:  .  .  #  #  #  .   ← y=1
-  2:  .  #  #  .  #  .   ← y=3
-  3:  .  #  #  #  #  .   ← y=5
-  4:  .  .  .  #  #  .   ← y=7
+  1:  .  .  #  #  #  .   <- y=1
+  2:  .  #  #  .  #  .   <- y=3
+  3:  .  #  #  #  #  .   <- y=5
+  4:  .  .  .  #  #  .   <- y=7
   5:  .  .  .  .  .  .
 
      x=  2  7  9  11
 ```
 
-Now the perimeter is marked, internal cells are not. Now we need to mark either internal or external in order to calculate the prefix sums. I chose to mark external cells, cells that are outside the perimeter.
+Now the perimeter is marked, internal cells are not. Either internal or external cells now need marking in order to calculate the prefix sums. I chose to mark external cells, cells that are outside the perimeter.
 
 For this I thought to flood fill using recursion. However I was dissuaded from attempting this and told to attempt using BFS [Breadth-first search](https://en.wikipedia.org/wiki/Breadth-first_search), another new concept to me.
 
@@ -142,10 +138,10 @@ Starting at the top left in my case:
 
   1. Add the first cell to the queue and mark it as true.
   1. Loop through the queue.
-     1. Take the front item from the queue.
-     2. Check each cardinal direction (n/s/e/w) for validity (inside the grid, not part of the shape or already marked external).
-     2. If valid mark as true and add to the back of the queue.
-     2. Remove the current cell from the queue and continue looping.
+     * Take the front item from the queue.
+     * Check each cardinal direction (n/s/e/w) for validity (inside the grid, not part of the shape or already marked external).
+     * If valid mark as true and add to the back of the queue.
+     * Remove the current cell from the queue and continue looping.
   1. End loop once the queue is empty.
 
 The example looks something like below. Left: once external cells are marked (`exterior` array), Right: the valid shape area (shown here for clarity, no array is ever made that looks exactly like this):
@@ -166,7 +162,9 @@ E = exterior             |    . = exterior
 
 [Prefix sum](https://leetcopilot.dev/leetcode-pattern/prefix-sum/guide). We now know where the shape isn't and we can use this to make the prefix sum array.
 
-Iterating through the entire `exterior` array. If a cell is not marked true then its value is 1, add that value to the value of the cells immediately above and to the left of it. Subtract the value of the cell diagonally up and to the left to account for [shared cells](https://en.wikipedia.org/wiki/Inclusion%E2%80%93exclusion_principle).
+Iterating through the entire `exterior` array.
+If a cell is not marked true then its value is 1, add that value to the value of the cells immediately above and to the left of it.
+Subtract the value of the cell diagonally up and to the left to account for [shared cells](https://en.wikipedia.org/wiki/Inclusion%E2%80%93exclusion_principle).
 
 Once done, the top left should be 0 and the bottom right should be the total number of valid shape cells in the grid.
 

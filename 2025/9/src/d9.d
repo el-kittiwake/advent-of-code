@@ -6,6 +6,9 @@
             https://dlang.org/spec/intro.html
             https://dlang.org/phobos/
             Programming in D by Ali Çehreli
+
+    Part 1: 4745816424
+    Part 2: 1351617690
 */
 
 import std.stdio;
@@ -31,6 +34,7 @@ import std.container : DList;
             ! template argument, call left with right
             to!: to(T), template for type conversion. to!int, to!string, etc.
         inputCoords grows by longPair each line
+            The binary operator ~ is the cat operator.
 */
 long[][] fillArray(string fileName)
 {
@@ -320,9 +324,9 @@ long findRectangle(long[][] inputData,
         - Buffer is +1 around the whole field.
         - Remaining cells = interior (perimeter + interior = "valid")
         - exterior
-    6. Calculate 2D prefix sum over valid cells.
+    5. Calculate 2D prefix sum over valid cells.
         - Sum of all cells accumulated from top left to bottom right.
-    7. Same combination pair loop as for Part 1:
+    6. Same combination pair loop as for Part 1:
         - Find compressed indices for each vertex pair.
         - Prefix sum query to check rectangle validity.
         - If valid, compute original-space area with part 1.
