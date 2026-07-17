@@ -1,4 +1,6 @@
 # Advent of code 2025, day 10, Python
+# Part 1: 517
+# Part 2: 21469
 
 import re
 import itertools
@@ -56,7 +58,7 @@ def part_1(lights: str, buttons: list[str]) -> int:
 
     for i in range(1, len(buttons_int_masks) + 1):
         for combination in itertools.combinations(buttons_int_masks, i):
-            # XOR all button masks in this combination together.
+            # XOR all button masks in this combination together `^`.
             # If the result matches the target, this combination is a solution.
             xor_result = 0
             for button_mask in combination:

@@ -1,6 +1,6 @@
 # Day 10 (Python)
 
-For day 10, I am given the partially destroyed remnants of a factory's machine manuals. All that remains is a list of indicator light diagrams, arranged in lines as below:
+For day 10, I am given partially destroyed machine manuals. All that remains is a list of indicator light diagrams, arranged in lines as below:
 
 ``` text
 [.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
@@ -14,7 +14,7 @@ Each line consists of:
 * Button wiring schematics `(...)`: one or more strings of comma separated values, each denoting which lights a particular button toggles.
 * Joltage requirements `{...}`: a comma-separated list of integers, one per light.
 
-My answers are: 517 and 21469 (1.4 seconds) for parts 1 and 2 respectively.
+My answers are: 517 and 21469 for parts 1 and 2 respectively.
 
 ## Input handling
 
@@ -48,11 +48,11 @@ Iterate through combinations of buttons using `itertools.combinations`, starting
 
 ## Part 2
 
-Find the minimum number of button presses resulting in the total number of toggles on each light exactly matching the corresponding joltage value. Buttons may now be pressed multiple times. Return the cumulative total across all machines.
+Find the minimum number of button presses which results in the total number of toggles on each light exactly matching the corresponding joltage value. Buttons may now be pressed multiple times. Return the cumulative total across all machines.
 
 ### Part 2 solution
 
-Joltage values in the input get up to 265 on some lines. Because of this, button counts could reach into the hundreds, making brute force somewhat time consuming. A machine with 13 buttons and an average bound of 50 presses per button gives 50^13 ≈ 10^22 possibilities. This would make the puzzle a lifetime endeavour!
+Joltage values in the input get up to 265 on some lines. Because of this, button counts could reach into the hundreds, making brute force somewhat time consuming. A machine with 13 buttons and an average count of 50 presses per button gives 50^13 ≈ 10^22 possibilities. This would make the puzzle a lifetime endeavour!
 
 The puzzle resembles a system of linear equations with a non-negative integer constraint. The method used is known as [Integer Linear Programming (ILP)](https://en.wikipedia.org/wiki/Integer_programming).
 
@@ -75,7 +75,7 @@ j2 = 4 = 3 * (2,3)
 j3 = 7 = 5 * (1,3) + 3 * (2,3)
 ```
 
-My first thought was brute force, quickly replaced by my second thoughts; to use something like numpy or scipy. However [PuLP](https://coin-or.github.io/pulp/) came up, as it is designed specifically for this kind of work, it seemed ideal.
+My first thought was brute force, quickly replaced by my second thoughts; to use something like numpy or scipy. However [PuLP](https://coin-or.github.io/pulp/) came up while searching, as it is designed specifically for this kind of work, it seemed ideal.
 
 The problem is initialised with `pulp.LpProblem`. Integer variables are created using the `pulp.LpVariable.dicts` method, one variable per button.
 
@@ -95,7 +95,7 @@ Regex really helped make the parsing stage easy, grabbing what I need with minim
 
 PuLP was the star of the show though. Just declare variables, constraints and set up the problem. It solves the problem in a way that feels mathematical, which is ideal for its intended use. Regardless, PuLP does in a matter of a few lines what would take other methods quite a lot more code complexity. Not to mention time complexity.
 
-Like the previous day, part 1 and 2 required very different approaches. On to the next....
+Like the previous day, part 1 and 2 required very different approaches.
 
 New concepts encountered:
 
