@@ -25,7 +25,7 @@ So, for the region of 42x42 in area we must fit: 32 type 0 presents, 31 type 1, 
 
 This is a [polyomino packing problem](https://www.isnphard.com/i/polyomino-packing/), which is [NP-hard](https://en.wikipedia.org/wiki/NP-hardness).
 
-The solution to the puzzle is the number of regions inside which every assigned present will fit.
+The shortcut solution to the puzzle is the number of regions inside which every assigned present will fit.
 
 My answer is: 587.
 

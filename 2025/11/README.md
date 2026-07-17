@@ -35,7 +35,7 @@ Due to quirks of the language, a new map has to be created every line, because m
 
 ## Part 1
 
-Find the total number of distinct paths in the system from "you" to "out". The example input has 5 total paths.
+Find the total number of distinct paths in the system from "you" to "out".
 
 ### Part 1 solution
 
@@ -162,6 +162,6 @@ New concepts:
 
 Sources I found useful:
 
-* [Learn You a Haskell for Great Good](http://learnyouahaskell.com). A well regarded and free online book. It covers the basics, however I did find its style hard to follow at times.
+* [Learn You a Haskell for Great Good](http://learnyouahaskell.com). A well regarded and free online book. It covers the basics, however I did find it somewhat disjointed and disorganised and hard to follow at times.
 * [Hoogle](https://hoogle.haskell.org). Official standard library function search.
 * Lots of Wikipedia articles for concepts.

@@ -4,6 +4,9 @@
     Resources:
                 https://hoogle.haskell.org/
                 https://learnyouahaskell.github.io/
+
+    Part 1: 613
+    Part 2: 372918445876116
 -}
 
 import qualified Data.Map as Map
@@ -111,7 +114,7 @@ pathsOne currDev graph memo
     step (acc, mem) neigh  = let (count, mem') = pathsOne neigh graph mem
                              in  (acc + count, mem')
 
---- | Calculate path count for part two. Paths must visit both "dac" and "fft".
+-- | Calculate path count for part two. Paths must visit both "dac" and "fft".
 --   visitDAC, visitFFT track which required nodes have been visited so far.
 --   "out"     -> done, return 1 only if both bools True, else 0
 --   cache hit -> key is (device, visitDAC, visitFFT), four distinct states
@@ -140,9 +143,10 @@ pathsTwo currDev visitDAC visitFFT graph memo
 -- |main
 --  ├─ read input file
 --  ├─ parse lines -> build Map String [String] (adjacency list)
---  ├─ paths "you" graph (recursive, memoised)
---  │    base case: node == "out" -> 1
---  │    recursive: sum (map (\n -> paths n graph) neighbours)
+--  ├─ paths "you" (P1), "svr" (P2) graph (recursive, memoised)
+--  |  Part 2: force pass through "dac" and "fft"
+--  │    Base case: node == "out" -> 1
+--  │    Recursive: sum (map (\n -> paths n graph) neighbours)
 --  └─ print result
 {-
     let: bind a name to a value, one of the 2 allowed ways to bind in a do block. 
